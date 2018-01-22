@@ -1,8 +1,10 @@
 package com.quebic.auth.api.security.controller;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.quebic.auth.api.security.JwtTokenUtil;
+import com.quebic.auth.api.security.dto.JwtAuthenticationDto;
+import com.quebic.auth.api.security.dto.JwtResponse;
+import com.quebic.common.exception.UnAuthorizedAccessException;
+import com.quebic.common.util.ControllerBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +15,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.quebic.auth.api.security.JwtTokenUtil;
-import com.quebic.auth.api.security.dto.JwtAuthenticationDto;
-import com.quebic.auth.api.security.dto.JwtResponse;
-import com.quebic.common.exception.UnAuthorizedAccessException;
-import com.quebic.common.util.ControllerBase;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")
@@ -39,7 +42,7 @@ public class AuthController extends ControllerBase {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<JwtResponse> createAuthenticationToken(
-			@RequestAttribute JwtAuthenticationDto jwtAuthenticationDto, Device device)
+			@RequestBody JwtAuthenticationDto jwtAuthenticationDto, Device device)
 					throws Exception {
 
 		// Checking username|email and password
