@@ -2,6 +2,10 @@
 spring:
   application:
     name: order-service
+  output:
+    ansi:
+      enabled: always
+
 
 # Mongo properties
   data:
