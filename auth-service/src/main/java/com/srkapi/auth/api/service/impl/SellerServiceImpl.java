@@ -1,13 +1,7 @@
 package com.srkapi.auth.api.service.impl;
 
-import javax.annotation.PostConstruct;
-
-import com.srkapi.auth.api.dto.SellerDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.srkapi.auth.api.dao.UserDao;
+import com.srkapi.auth.api.dto.SellerDto;
 import com.srkapi.auth.api.model.Role;
 import com.srkapi.auth.api.model.User;
 import com.srkapi.auth.api.security.SecurityUtil;
@@ -16,18 +10,19 @@ import com.srkapi.auth.api.service.UserService;
 import com.srkapi.common.exception.BadRequestException;
 import com.srkapi.common.messages.ErrorMessage;
 import com.srkapi.common.service.impl.GenericServiceImpl;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import rx.Single;
 import rx.exceptions.Exceptions;
+
+import javax.annotation.PostConstruct;
 
 @Service
 public class SellerServiceImpl extends GenericServiceImpl<User, SellerDto> implements SellerService {
 
     @Autowired
     private UserDao sellerDao;
-
-
-
 
 
     @Autowired

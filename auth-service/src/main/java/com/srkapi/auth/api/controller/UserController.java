@@ -1,22 +1,20 @@
 package com.srkapi.auth.api.controller;
 
+import com.srkapi.auth.api.dto.PasswordDto;
 import com.srkapi.auth.api.dto.UserDto;
+import com.srkapi.auth.api.dto.UserImageDto;
 import com.srkapi.auth.api.model.Role;
+import com.srkapi.auth.api.model.User;
+import com.srkapi.auth.api.service.UserService;
+import com.srkapi.common.async.response.AsyncResponseEntity;
 import com.srkapi.common.model.Permission;
+import com.srkapi.common.response.CommonResponse;
+import com.srkapi.common.sse.ListenerType;
+import com.srkapi.common.util.ControllerBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.srkapi.auth.api.dto.PasswordDto;
-import com.srkapi.auth.api.dto.UserImageDto;
-import com.srkapi.auth.api.model.User;
-import com.srkapi.auth.api.service.UserService;
-import com.srkapi.common.async.response.AsyncResponseEntity;
-import com.srkapi.common.response.CommonResponse;
-import com.srkapi.common.sse.ListenerType;
-import com.srkapi.common.util.ControllerBase;
-
-import javax.mail.internet.ContentType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class UserController extends ControllerBase {
     }
 	
 	@RequestMapping("/{id}")
-    public AsyncResponseEntity<User> getById(@PathVariable("id") String id) {
+    public AsyncResponseEntity<UserDto> getById(@PathVariable("id") String id) {
 		return makeAsyncResponse(userService.getById(id));
     }
 	
@@ -49,7 +47,7 @@ public class UserController extends ControllerBase {
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT)
-    public AsyncResponseEntity<User> update(@ModelAttribute User user) {
+    public AsyncResponseEntity<UserDto> update(@ModelAttribute User user) {
     	return makeAsyncResponse(userService.edit(user, new UserImageDto()).map(i->{
 			publishMessage(i.getId(), i);
 			return i;
@@ -58,7 +56,7 @@ public class UserController extends ControllerBase {
 
 	@RequestMapping(path = "/",method = RequestMethod.POST,
 			produces="application/json", consumes="application/json;text/plain;charset=UTF-8")
-	public AsyncResponseEntity<User> save(@RequestBody UserDto user) {
+	public AsyncResponseEntity<UserDto> save(@RequestBody UserDto user) {
 		return makeAsyncResponse(userService.add(toUser(user)).map(i->{
 			publishMessage(i.getId(), i);
 			return i;
@@ -67,7 +65,7 @@ public class UserController extends ControllerBase {
 
 
 	@RequestMapping(value="/updateFullProfile", method = RequestMethod.POST)
-    public AsyncResponseEntity<User> updateFullProfile(@ModelAttribute User user, @ModelAttribute UserImageDto imageDto) {
+    public AsyncResponseEntity<UserDto> updateFullProfile(@ModelAttribute User user, @ModelAttribute UserImageDto imageDto) {
     	return makeAsyncResponse(userService.edit(user, imageDto).map(i->{
 			publishMessage(i.getId(), i);
 			return i;
