@@ -60,10 +60,7 @@ public class AppConfiguration {
         };
 	}
 	
-	@Bean
-    public CacheManager cacheManager() {
-        return CacheConfig.createCacheManager("OrderDaoImpl");
-    }
+
 	
 	@LoadBalanced
 	@Bean

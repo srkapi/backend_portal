@@ -15,22 +15,22 @@ public class OrderController extends ControllerBase{
 	@Autowired
 	private OrderService orderService;
 	
-	@RequestMapping
+	@GetMapping
     public AsyncResponseEntity<OrderDto> getAll() {
 	    return makeAsyncResponse(orderService.getAll().map(order -> order.toDto()));
     }
-	
-	@RequestMapping("/{id}")
+
+    @GetMapping("/{id}")
     public AsyncResponseEntity<OrderDto> getById(@PathVariable("id") String id) {
 		return makeAsyncResponse(orderService.getById(id));
     }
 	
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
     public AsyncResponseEntity<OrderDto> add(@RequestBody OrderDto order) {
     	return makeAsyncResponse(orderService.add(order.toModel()), HttpStatus.CREATED);
     }
     
-    @RequestMapping(method = RequestMethod.PUT)
+    @PutMapping
     public AsyncResponseEntity<OrderDto> edit(@RequestBody OrderDto order) {
     	return makeAsyncResponse(orderService.edit(order.toModel()), HttpStatus.ACCEPTED);
     }

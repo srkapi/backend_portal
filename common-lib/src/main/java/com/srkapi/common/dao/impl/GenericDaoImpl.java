@@ -1,22 +1,18 @@
 package com.srkapi.common.dao.impl;
 
-import java.util.List;
+import com.srkapi.common.dao.GenericDao;
+import com.srkapi.common.exception.DataAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
-
-import com.srkapi.common.dao.GenericDao;
-import com.srkapi.common.exception.DataAccessException;
-
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.mongodb.core.MongoOperations;
 
 @CacheConfig(cacheResolver="primaryCacheResolver")
-public class GenericDaoImpl<T> implements GenericDao<T> {
+public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(GenericDaoImpl.class);
 
@@ -61,48 +57,8 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 		}
 	}
 	
-	@Override
-	@Caching(
-			evict = {
-					@CacheEvict(key="#object.id"),
-					@CacheEvict(cacheResolver="secondaryCacheResolver", allEntries=true)
-				}
-			)
-	public T delete(T object) throws DataAccessException {
-		if (logger.isDebugEnabled())
-			logger.debug("type {} delete", type);
-		try {
-			mongoOperations.remove(object);
-			return object;
-		} catch (Exception e) {
-			throw new DataAccessException(e);
-		}
 
-	}
 
-	@Override
-	@Cacheable(key="#id" ,unless="#result == null")
-	public T getById(Object id) throws DataAccessException {
-		if (logger.isDebugEnabled())
-			logger.debug("type {} getById", type);
-		try{
-			return mongoOperations.findById(id, type);
-		}catch(Exception e){
-			throw new DataAccessException(e);
-		}
-	}
-
-	@Override
-	@Cacheable(cacheResolver="secondaryCacheResolver" ,unless="#result == null")
-	public List<T> getAll() throws DataAccessException {
-		if (logger.isDebugEnabled())
-			logger.debug("type {} getAll", type);
-		try {
-			return mongoOperations.findAll(type);
-		} catch (Exception e) {
-			throw new DataAccessException(e);
-		}
-	}
 
 	@Override
 	public MongoOperations getMongoOperations() {
