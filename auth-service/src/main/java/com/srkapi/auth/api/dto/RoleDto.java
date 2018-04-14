@@ -5,7 +5,17 @@ import java.util.List;
 
 public class RoleDto implements Serializable{
     private String code;
+    private String id;
     private List<PermissionDto> permissions;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCode() {
         return code;

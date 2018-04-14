@@ -3,6 +3,8 @@ package com.srkapi.auth.api.service.impl;
 import com.srkapi.auth.api.dao.UserDao;
 import com.srkapi.auth.api.dto.RoleDto;
 import com.srkapi.auth.api.dto.UserDto;
+import com.srkapi.auth.api.model.Permission;
+import com.srkapi.auth.api.model.Role;
 import com.srkapi.auth.api.model.User;
 import com.srkapi.auth.api.security.SecurityUtil;
 import com.srkapi.auth.api.service.RoleService;
@@ -192,6 +194,27 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
 
     @Override
     public User toModel(UserDto Dto) {
-        return null;
+
+        User result = new User();
+        result.setAttempts(Dto.getAttempts());
+        result.setEmail(Dto.getEmail());
+        result.setFirstName(Dto.getFirstName());
+        result.setLastName(Dto.getLastName());
+        result.setPassword(Dto.getPassword());
+        List<Role> roles = new ArrayList<>();
+        Dto.getRoles().forEach(it->{
+            Role aux = new Role();
+            aux.setCode(it.getCode());
+            roles.add(aux);
+        });
+        result.setRoles(roles);
+        List<Permission> permissions = new ArrayList<>();
+        Dto.getPermissions().forEach(it->{
+            Permission aux = new Permission();
+            aux.setCode(it.getCode());
+            permissions.add(aux);
+        });
+        result.setPermissions(permissions);
+        return result;
     }
 }

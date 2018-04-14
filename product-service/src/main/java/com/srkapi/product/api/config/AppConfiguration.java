@@ -17,7 +17,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import com.srkapi.common.async.AsyncConfig;
 import com.srkapi.common.cache.CacheConfig;
-import com.srkapi.common.dao.DaoConfig;
 import com.srkapi.common.security.SecurityConfig;
 import com.srkapi.common.sse.SseConfig;
 

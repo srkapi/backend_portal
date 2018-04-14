@@ -2,12 +2,10 @@ package com.srkapi.order.api.config;
 
 import com.srkapi.common.async.AsyncConfig;
 import com.srkapi.common.cache.CacheConfig;
-import com.srkapi.common.dao.DaoConfig;
 import com.srkapi.common.security.SecurityConfig;
 import com.srkapi.common.sse.SseConfig;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
-import org.springframework.cache.CacheManager;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
