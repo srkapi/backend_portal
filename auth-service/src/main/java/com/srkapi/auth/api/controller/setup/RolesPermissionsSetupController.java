@@ -1,16 +1,16 @@
 package com.srkapi.auth.api.controller.setup;
 
+import com.srkapi.auth.api.model.Permission;
+import com.srkapi.auth.api.model.Role;
+import com.srkapi.auth.api.service.PermissionService;
+import com.srkapi.auth.api.service.RoleService;
+import com.srkapi.common.constants.PermissionConstant;
+import com.srkapi.common.util.ControllerBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.srkapi.auth.api.model.Role;
-import com.srkapi.auth.api.service.PermissionService;
-import com.srkapi.auth.api.service.RoleService;
-import com.srkapi.common.model.Permission;
-import com.srkapi.common.util.ControllerBase;
 
 /**
  * Only for development
@@ -30,35 +30,19 @@ public class RolesPermissionsSetupController extends ControllerBase{
 		
 		//Permission
 		Permission permission_USER = new Permission();
-		permission_USER.setId(Permission.USER);
-		permission_USER.setCode(Permission.USER);
+		permission_USER.setId(PermissionConstant.USER);
+		permission_USER.setCode(PermissionConstant.USER);
 		permission_USER.setStatus(1);
 		
 		Permission permission_ADMIN = new Permission();
-		permission_ADMIN.setId(Permission.USER_ADMIN);
-		permission_ADMIN.setCode(Permission.USER_ADMIN);
+		permission_ADMIN.setId(PermissionConstant.USER_ADMIN);
+		permission_ADMIN.setCode(PermissionConstant.USER_ADMIN);
 		permission_ADMIN.setStatus(1);
 		
-		Permission permission_SELLER_ADMIN = new Permission();
-		permission_SELLER_ADMIN.setId(Permission.USER_SELLER_ADMIN);
-		permission_SELLER_ADMIN.setCode(Permission.USER_SELLER_ADMIN);
-		permission_SELLER_ADMIN.setStatus(1);
-		
-		Permission permission_SELLER = new Permission();
-		permission_SELLER.setId(Permission.USER_SELLER);
-		permission_SELLER.setCode(Permission.USER_SELLER);
-		permission_SELLER.setStatus(1);
-		
-		Permission permission_BUYER = new Permission();
-		permission_BUYER.setId(Permission.USER_BUYER);
-		permission_BUYER.setCode(Permission.USER_BUYER);
-		permission_BUYER.setStatus(1);
+
 		
 		permissionService.add(permission_USER);
 		permissionService.add(permission_ADMIN);
-		permissionService.add(permission_SELLER_ADMIN);
-		permissionService.add(permission_SELLER);
-		permissionService.add(permission_BUYER);
 		//Permission
 		
 		//Role ROLE_ADMIN
@@ -75,25 +59,21 @@ public class RolesPermissionsSetupController extends ControllerBase{
 		role_SELLER_ADMIN.setCode(Role.ROLE_SELLER_ADMIN);
 		role_SELLER_ADMIN.setStatus(1);
 		role_SELLER_ADMIN.getPermissions().add(permission_USER);
-		role_SELLER_ADMIN.getPermissions().add(permission_SELLER_ADMIN);
-		role_SELLER_ADMIN.getPermissions().add(permission_SELLER);
-		
+
 		//Role ROLE_SELLER
 		Role role_SELLER = new Role();
 		role_SELLER.setId(Role.ROLE_SELLER);
 		role_SELLER.setCode(Role.ROLE_SELLER);
 		role_SELLER.setStatus(1);
 		role_SELLER.getPermissions().add(permission_USER);
-		role_SELLER.getPermissions().add(permission_SELLER);
-		
+
 		//Role ROLE_BUYER
 		Role role_BUYER = new Role();
 		role_BUYER.setId(Role.ROLE_BUYER);
 		role_BUYER.setCode(Role.ROLE_BUYER);
 		role_BUYER.setStatus(1);
 		role_BUYER.getPermissions().add(permission_USER);
-		role_BUYER.getPermissions().add(permission_BUYER);
-		
+
 		roleService.add(role_ADMIN);
 		roleService.add(role_SELLER_ADMIN);
 		roleService.add(role_SELLER);

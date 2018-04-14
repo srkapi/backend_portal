@@ -1,66 +1,49 @@
 package com.srkapi.common.service.impl;
 
-import com.srkapi.common.dao.GenericDao;
-import com.srkapi.common.exception.DataAccessException;
+import com.srkapi.common.dao.impl.GenericRepositoryMongoImpl;
 import com.srkapi.common.model.EntityBase;
 import com.srkapi.common.service.GenericService;
-import rx.Observable;
-import rx.Single;
+import com.srkapi.common.service.Mapper;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-public class GenericServiceImpl<T extends EntityBase,S> implements GenericService<T,S> {
+public abstract class GenericServiceImpl<T extends EntityBase,S> implements GenericService<T,S>,Mapper<T,S> {
 	
-	private Class<? extends T> type;
-	protected GenericDao<T> genericDao;
+	protected GenericRepositoryMongoImpl<T> genericDao;
 	
-	protected void init(Class<? extends T> type, GenericDao<T> dao) {
-        this.type = type;
-        this.genericDao = dao;
-    }
-	
+
 	@Override
-	public Single<S> getById(String id){
-		try {
-			return Single.just(genericDao.getById(id)).map(o->(S)o.toDto());
-        } catch (DataAccessException de) {
-        	return Single.error(de);
-        } 
+	public Mono<S> getById(String id){
+			return this.genericDao.findById(id).map(it -> toDto(it));
+	}
+
+	public abstract S toDto(T model);
+	public abstract T toModel(S Dto);
+
+
+
+	@Override
+	public Mono<S> add(S obj){
+		return this.genericDao.save(toModel(obj)).map(it->toDto(it));
 	}
 
 	@Override
-	public Single<S> add(T obj){
-		try {
-			return Single.just(genericDao.add(obj)).map(o->(S)o.toDto());
-		} catch (DataAccessException de) {
-			return Single.error(de);
-		}
+	public Mono<S> edit(S obj){
+		return this.genericDao.save(toModel(obj)).map(it->toDto(it));
 	}
 
 	@Override
-	public Single<S> edit(T obj){
-		try {
-			return Single.just(genericDao.add(obj)).map(o->(S)o.toDto());
-		} catch (DataAccessException de) {
-			return Single.error(de);
-		}
+	public Flux<Boolean> delete(S obj){
+		Mono<Void> delete = this.genericDao.delete(toModel(obj));
+		Flux<Boolean> booleanFlux = delete.flatMap(it ->
+				Mono.just(true)
+		);
+		return booleanFlux;
 	}
 
 	@Override
-	public Single<Boolean> delete(T obj){
-		try {
-            genericDao.delete(obj);
-            return Single.just(true);
-        } catch (DataAccessException de) {
-        	return Single.error(de);
-        }
-	}
-
-	@Override
-	public Observable<T> getAll(){
-		try {
-            return Observable.from(genericDao.getAll());
-        } catch (DataAccessException de) {
-        	return Observable.error(de);
-        } 
+	public Flux<S> getAll(){
+		return this.genericDao.findAll().map(it -> toDto(it));
 	}
 
 }

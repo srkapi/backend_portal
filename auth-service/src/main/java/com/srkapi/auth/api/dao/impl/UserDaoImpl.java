@@ -1,18 +1,17 @@
 package com.srkapi.auth.api.dao.impl;
 
-import java.util.List;
-
+import com.srkapi.auth.api.dao.UserDao;
+import com.srkapi.auth.api.model.Permission;
+import com.srkapi.auth.api.model.User;
+import com.srkapi.common.dao.impl.GenericDaoImpl;
+import com.srkapi.common.exception.DataAccessException;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import com.srkapi.auth.api.dao.UserDao;
-import com.srkapi.auth.api.model.User;
-import com.srkapi.common.dao.impl.GenericDaoImpl;
-import com.srkapi.common.exception.DataAccessException;
-import com.srkapi.common.model.Permission;
+import java.util.List;
 
 @Repository
 @CacheConfig(cacheResolver="secondaryCacheResolver", keyGenerator="customKeyGenerator")

@@ -2,11 +2,10 @@ package com.srkapi.common.dao;
 
 import com.srkapi.common.exception.DataAccessException;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 import java.util.List;
 
-public interface GenericDao<T> extends ReactiveMongoRepository<T, String> {
+public interface GenericDao<T>  {
     /**
      * This method delete given object from the database.
      *
@@ -37,7 +36,8 @@ public interface GenericDao<T> extends ReactiveMongoRepository<T, String> {
      * @throws DataAccessException - throws if an error occurs
      */
     T modify(T object) throws DataAccessException;
-    
+
+    T delete (T object)throws DataAccessException;
 
 
     MongoOperations getMongoOperations();

@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.quebic.auth.api.model.Role.ROLE_SELLER;
 
 @Repository
 public class RoleDaoImpl extends GenericDaoImpl<Role> implements RoleDao {

@@ -1,10 +1,8 @@
 package com.srkapi.auth.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.srkapi.auth.api.dto.UserDto;
 import com.srkapi.common.model.EntityBase;
-import com.srkapi.common.model.Permission;
-import com.srkapi.common.model.image.ImageContainer;
+import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,38 +11,22 @@ import java.util.Date;
 import java.util.List;
 
 @Document(collection="User")
-public class User extends EntityBase<User,UserDto>{
-
+@Data
+public class User extends EntityBase{
     private String email;
-    
 	private String username;
-
     private String password;
-    
     private String firstName;
-
     private String lastName;
-    
-    private ImageContainer profileImageContainer = new ImageContainer();
-
-    private ImageContainer coverImageContainer = new ImageContainer();
-
     private Date lastLoggedOn;
-
     private Date registeredOn;
-
     private Integer attempts;
-
     @DBRef
     private List<Role> roles = new ArrayList<>();
-
     @DBRef
     private List<Permission> permissions = new ArrayList<>();
-    
     private EmailVerification emailVerification;
-    
     private Date lastPasswordResetDate;
-    
     private SellerProfile sellerProfile = new SellerProfile();
     private BuyerProfile buyerProfile = new BuyerProfile();
 
@@ -89,21 +71,7 @@ public class User extends EntityBase<User,UserDto>{
         this.lastName = lastName;
     }
     
-	public ImageContainer getProfileImageContainer() {
-		return profileImageContainer;
-	}
 
-	public void setProfileImageContainer(ImageContainer profileImageContainer) {
-		this.profileImageContainer = profileImageContainer;
-	}
-
-	public ImageContainer getCoverImageContainer() {
-		return coverImageContainer;
-	}
-
-	public void setCoverImageContainer(ImageContainer coverImageContainer) {
-		this.coverImageContainer = coverImageContainer;
-	}
 
 	public Date getLastLoggedOn() {
         return lastLoggedOn;
@@ -181,8 +149,4 @@ public class User extends EntityBase<User,UserDto>{
 	}
 
 
-	@Override
-	public UserDto toDto() {
-		return null;
-	}
 }

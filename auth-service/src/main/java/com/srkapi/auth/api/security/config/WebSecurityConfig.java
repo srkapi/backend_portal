@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.srkapi.auth.api.security.JwtAuthenticationEntryPoint;
 import com.srkapi.auth.api.security.JwtAuthenticationTokenFilter;
-import com.srkapi.common.model.Permission;
+import com.srkapi.auth.api.model.Permission;
 
 @Configuration
 @EnableWebSecurity

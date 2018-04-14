@@ -61,7 +61,7 @@ public class AuthController extends ControllerBase {
 
 	}
 
-	@RequestMapping("/current")
+	@RequestMapping(method = RequestMethod.POST, value = "/current")
 	public ResponseEntity<UserDetails> getCurrent() throws Exception{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		

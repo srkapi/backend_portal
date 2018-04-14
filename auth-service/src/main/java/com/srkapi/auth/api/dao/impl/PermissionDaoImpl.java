@@ -4,7 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import com.srkapi.auth.api.dao.PermissionDao;
 import com.srkapi.common.dao.impl.GenericDaoImpl;
-import com.srkapi.common.model.Permission;
+import com.srkapi.auth.api.model.Permission;
 
 @Repository
 public class PermissionDaoImpl extends GenericDaoImpl<Permission> implements PermissionDao {

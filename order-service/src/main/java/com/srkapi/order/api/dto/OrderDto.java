@@ -1,6 +1,5 @@
 package com.srkapi.order.api.dto;
 
-import com.srkapi.common.BaseDto;
 import com.srkapi.order.api.model.Order;
 
 import java.io.Serializable;

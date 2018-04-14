@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import com.srkapi.auth.api.model.User;
 import com.srkapi.auth.api.security.JwtUser;
 import com.srkapi.auth.api.service.UserService;
-import com.srkapi.common.model.Permission;
+import com.srkapi.auth.api.model.Permission;
 
 @Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {

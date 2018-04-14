@@ -1,14 +1,10 @@
 package com.srkapi.auth.api.dto;
 
-import com.srkapi.auth.api.model.User;
-import com.srkapi.common.BaseDto;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class UserDto extends BaseDto<User> implements Serializable {
+public class UserDto implements Serializable {
     private String id;
     private String email;
     private String username;
@@ -95,15 +91,5 @@ public class UserDto extends BaseDto<User> implements Serializable {
         this.permissions = permissions;
     }
 
-    @Override
-    public User toModel() {
-        User user = new User();
-        user.setAttempts(this.attempts);
-        user.setEmail(this.email);
-        user.setUsername(this.username);
-        user.setFirstName(this.firstName);
-        user.setLastName(this.lastName);
-        user.setRoles(this.roles.stream().map(RoleDto::toModel).collect(Collectors.toList()));
-        return  user;
-    }
+
 }

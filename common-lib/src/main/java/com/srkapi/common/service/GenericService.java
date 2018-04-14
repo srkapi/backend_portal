@@ -1,18 +1,18 @@
 package com.srkapi.common.service;
 
-import rx.Observable;
-import rx.Single;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface GenericService<T,S>{
 
-	Single<S> getById(String id);
+	Mono<S> getById(String id);
 
-	Single<S>  add(T obj);
+	Mono<S> add(S obj);
 
-	Single<S> edit(T obj);
+	Mono<S> edit(S obj);
 
-	Single<Boolean> delete(T object);
+	Flux<Boolean> delete(S object);
 
-	Observable<T> getAll();
+	Flux<S> getAll();
     
 }

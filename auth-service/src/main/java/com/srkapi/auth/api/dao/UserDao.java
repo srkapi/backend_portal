@@ -1,11 +1,11 @@
 package com.srkapi.auth.api.dao;
 
-import java.util.List;
-
+import com.srkapi.auth.api.model.Permission;
 import com.srkapi.auth.api.model.User;
 import com.srkapi.common.dao.GenericDao;
 import com.srkapi.common.exception.DataAccessException;
-import com.srkapi.common.model.Permission;
+
+import java.util.List;
 
 public interface UserDao extends GenericDao<User>{
 	

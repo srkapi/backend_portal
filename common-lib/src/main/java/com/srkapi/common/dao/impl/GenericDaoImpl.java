@@ -11,6 +11,8 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.mongodb.core.MongoOperations;
 
+import java.util.List;
+
 @CacheConfig(cacheResolver="primaryCacheResolver")
 public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
@@ -39,6 +41,21 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 		} catch (Exception e) {
 			throw new DataAccessException(e);
 		}
+	}
+
+	@Override
+	public T getById(Object id) throws DataAccessException {
+		return null;
+	}
+
+	@Override
+	public List<T> getAll() throws DataAccessException {
+		return null;
+	}
+
+	@Override
+	public T delete(T object) throws DataAccessException {
+		return null;
 	}
 
 	@Override

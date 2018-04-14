@@ -4,25 +4,25 @@ import com.srkapi.auth.api.dto.UserDto;
 import com.srkapi.auth.api.dto.UserImageDto;
 import com.srkapi.auth.api.model.User;
 import com.srkapi.common.service.GenericService;
-import rx.Single;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface UserService extends GenericService<User,UserDto>{
 	
-	Single<User> findByEmail(String email);
-	
-	Single<User> findByUsernameOrEmail(String username, String email);
+	Mono findByEmail(String email);
+
+	Mono<User> findByUsernameOrEmail(String username, String email);
     
-	Single<UserDto> edit(User user, UserImageDto imageDto);
+	Mono<Object> edit(User user, UserImageDto imageDto);
 
 
-	Single<Boolean> delete(String id);
+	Mono<Boolean> delete(String id);
 
-	Single<Boolean> delete(List<String> idList);
-    
-	Single<User> findUserByToken(String token);
+	Mono<Boolean> delete(List<String> idList);
 
-	Single<Boolean> changePassword(String oldPassword, String newPassword);
+	Mono<User> findUserByToken(String token);
+
+	Mono<Boolean> changePassword(String oldPassword, String newPassword);
 	
 }

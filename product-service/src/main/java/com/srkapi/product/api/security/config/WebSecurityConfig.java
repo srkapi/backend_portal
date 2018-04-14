@@ -1,5 +1,8 @@
 package com.srkapi.product.api.security.config;
 
+import com.srkapi.common.constants.PermissionConstant;
+import com.srkapi.common.security.CommonAuthenticationEntryPoint;
+import com.srkapi.common.security.CommonAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.srkapi.common.model.Permission;
-import com.srkapi.common.security.CommonAuthenticationEntryPoint;
-import com.srkapi.common.security.CommonAuthenticationTokenFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -43,8 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 
                 .antMatchers(HttpMethod.GET, "/products/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/products/**").hasRole(Permission.USER_SELLER)
-				.antMatchers(HttpMethod.PUT, "/products/**").hasRole(Permission.USER_SELLER)
+                .antMatchers(HttpMethod.POST, "/products/**").hasRole(PermissionConstant.USER)
+				.antMatchers(HttpMethod.PUT, "/products/**").hasRole(PermissionConstant.USER)
                 
                 //authenticated requests
                 .anyRequest().authenticated();

@@ -7,7 +7,7 @@ import com.srkapi.auth.api.model.Role;
 import com.srkapi.auth.api.model.User;
 import com.srkapi.auth.api.service.UserService;
 import com.srkapi.common.async.response.AsyncResponseEntity;
-import com.srkapi.common.model.Permission;
+import com.srkapi.auth.api.model.Permission;
 import com.srkapi.common.response.CommonResponse;
 import com.srkapi.common.sse.ListenerType;
 import com.srkapi.common.util.ControllerBase;

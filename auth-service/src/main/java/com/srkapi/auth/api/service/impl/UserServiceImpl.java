@@ -11,10 +11,10 @@ import com.srkapi.auth.api.model.User;
 import com.srkapi.auth.api.security.SecurityUtil;
 import com.srkapi.auth.api.service.UserService;
 import com.srkapi.common.constants.ConfigConstants;
-import com.srkapi.common.exception.*;
-import com.srkapi.common.messages.ErrorMessage;
-import com.srkapi.common.messages.InfoMessage;
-import com.srkapi.common.model.image.Image;
+import com.srkapi.common.exception.DataAccessException;
+import com.srkapi.common.exception.DuplicateEmailRegisteredException;
+import com.srkapi.common.exception.OldPasswordNotMatch;
+import com.srkapi.common.exception.RequiredFieldMissingException;
 import com.srkapi.common.service.impl.GenericServiceImpl;
 import com.srkapi.common.util.image.ImageUtil;
 import org.slf4j.Logger;
@@ -24,8 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-import rx.Single;
+import reactor.core.publisher.Mono;
 import rx.exceptions.Exceptions;
 
 import javax.annotation.PostConstruct;
@@ -33,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implements UserService {
@@ -58,29 +56,32 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
     }
 
     @Override
-    public Single<User> findByEmail(String email) {
+    public Mono findByEmail(String email) {
         try {
-            return Single.just(userDao.findByEmail(email));
+
+            return Mono.just(userDao.findByEmail(email));
         } catch (DataAccessException e) {
-            return Single.error(e);
+            return Mono.error(e);
         }
     }
 
     @Override
-    public Single<User> findByUsernameOrEmail(String username, String email) {
+    public Mono<User> findByUsernameOrEmail(String username, String email) {
         try {
-            return Single.just(userDao.findByUsernameOrEmail(username, email));
+            return Mono.just(userDao.findByUsernameOrEmail(username, email));
         } catch (DataAccessException e) {
-            return Single.error(e);
+            return Mono.error(e);
         }
     }
 
     @Override
-    public Single<UserDto> add(User user) {
+    public Mono<UserDto> add(User user) {
 
         registerValidation(user);
 
-        return findByEmail(user.getEmail()).flatMap(checkUser -> {
+        Mono byEmail = findByEmail(user.getEmail());
+
+        return byEmail.map(checkUser -> {
 
             //check email already registered
             if (checkUser != null)
@@ -111,41 +112,21 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
 
             user.setStatus(User.STATUS_ACTIVE);
 
-            return super.add(user);
+             return super.add(user);
 
         });
 
     }
 
     @Override
-    public Single<UserDto> edit(User user, UserImageDto imageDto) {
+    public Mono<Object> edit(User user, UserImageDto imageDto) {
 
         User loggedUser = SecurityUtil.getLoggedDbUser();
 
         ImageUtil imageUtil = ImageUtil.createDropBoxStorageImageUtil();
 
-        //Prepare Profile Picture File Names
-        List<Image> tmpProfilePictures = new ArrayList<>();
-        for (MultipartFile file : imageDto.getProfileImagesFiles()) {
-            String fileName = imageUtil.genarateFileName(file);
-            tmpProfilePictures.add(new Image(fileName));
-        }
-        //Prepare Profile Picture File Names
-
-        //Prepare Cover Picture File Names
-        List<Image> tmpCoverPictures = new ArrayList<>();
-        for (MultipartFile file : imageDto.getCoverImagesFiles()) {
-            String fileName = imageUtil.genarateFileName(file);
-            tmpCoverPictures.add(new Image(fileName));
-        }
-        //Prepare Cover Picture File Names
-
-        return getById(loggedUser.getId()).flatMap(savedUser -> {
-            if (savedUser != null) {
-
-                /**
-                 * email, username, password, can't update by common edit function
-                 */
+        Mono<UserDto> byId = getById(loggedUser.getId());
+        return byId.map(savedUser -> {
                 user.setId(savedUser.getId());
                 user.setEmail(savedUser.getEmail());
                 user.setUsername(savedUser.getUsername());
@@ -155,110 +136,58 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
                 user.setAttempts(savedUser.getAttempts());
                 user.setStatus(1);
 
-                //add images with existing images
-//                user.setProfileImageContainer(savedUser.getProfileImageContainer());
-//                user.getProfileImageContainer().getImages().addAll(tmpProfilePictures);
-//
-//                user.setCoverImageContainer(savedUser.getCoverImageContainer());
-//                user.getCoverImageContainer().getImages().addAll(tmpCoverPictures);
-
-//                if (Role.checkUserIs_Seller_Admin(savedUser) || Role.checkUserIs_Seller(savedUser)) {
-//                    user.setSellerProfile(savedUser.getSellerProfile());
-//                    user.setBuyerProfile(null);
-//                } else if (Role.checkUserIs_Buyer(savedUser)) {
-//                    user.setBuyerProfile(savedUser.getBuyerProfile());
-//                    user.setSellerProfile(null);
+                return  super.edit(user);
 
 
-                return super.edit(user);
+        });
 
-
-            } else {
-                throw Exceptions.propagate(new ServiceException(ErrorMessage.USER_NOT_FOUND));
-            }
-        }).
-
-                map(u ->
-
-                {
-
-                    IntStream.range(0, imageDto.getProfileImagesFiles().size()).forEach(idx -> {
-
-                        String id = u.getId();
-                        String fileName = tmpProfilePictures.get(idx).getFileName();
-                        MultipartFile file = imageDto.getProfileImagesFiles().get(idx);
-
-                        try {
-                            imageUtil.storeFile(String.valueOf(id), fileName, IMAGE_LOCATION, ConfigConstants.IMAGE_PROFILE_UPLOAD_LOCATION, file).subscribe(s -> {
-                                logger.info(InfoMessage.USER_PROFILE_IMAGE_SAVED, s);
-                            });
-                        } catch (Exception e) {
-                            throw Exceptions.propagate(e);
-                        }
-                    });
-
-                    IntStream.range(0, imageDto.getCoverImagesFiles().size()).forEach(idx -> {
-
-                        String id = u.getId();
-                        String fileName = tmpCoverPictures.get(idx).getFileName();
-                        MultipartFile file = imageDto.getCoverImagesFiles().get(idx);
-
-                        try {
-                            imageUtil.storeFile(String.valueOf(id), fileName, IMAGE_LOCATION, ConfigConstants.IMAGE_COVER_UPLOAD_LOCATION, file).subscribe(s -> {
-                                logger.info(InfoMessage.USER_COVER_IMAGE_SAVED, s);
-                            });
-                        } catch (Exception e) {
-                            throw Exceptions.propagate(e);
-                        }
-                    });
-
-                    return u;
-                });
 
     }
 
 
     @Override
-    public Single<Boolean> changePassword(String oldPassword, String newPassword) {
+    public Mono<Boolean> changePassword(String oldPassword, String newPassword) {
 
         User loggedUser = SecurityUtil.getLoggedDbUser();
 
         if (passwordEncoder.matches(oldPassword, loggedUser.getPassword())) {
 
-            return getById(loggedUser.getId()).flatMap(savedUser -> {
+            Mono<UserDto> byId = getById(loggedUser.getId());
+            Mono<Boolean> map = byId.map(savedUser -> {
 
                 savedUser.setPassword(passwordEncoder.encode(newPassword));
 //                savedUser.setLastPasswordResetDate(new Date());
-                return Single.just(true);
+                return true;
 
             });
+            return map;
 
         } else
-            return Single.error(new OldPasswordNotMatch());
+            return Mono.error(new OldPasswordNotMatch());
     }
 
     @Override
-    public Single<Boolean> delete(String id) {
+    public Mono<Boolean> delete(String id) {
         User user = new User();
         user.setId(id);
         super.delete(user);
-        return Single.just(true);
+        return Mono.just(true);
     }
 
     @Override
-    public Single<Boolean> delete(List<String> idList) {
+    public Mono<Boolean> delete(List<String> idList) {
         for (String id : idList) {
             this.delete(id);
         }
-        return Single.just(true);
+        return Mono.just(true);
     }
 
     @Override
-    public Single<User> findUserByToken(String token) {
+    public Mono<User> findUserByToken(String token) {
         try {
-            return Single.just(userDao.findUserByToken(token));
+            return Mono.just(userDao.findUserByToken(token));
         } catch (Exception e) {
-            return Single.error(e);
+            return Mono.error(e);
         }
     }
 
