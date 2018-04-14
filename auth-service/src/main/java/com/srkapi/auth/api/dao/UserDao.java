@@ -2,19 +2,18 @@ package com.srkapi.auth.api.dao;
 
 import com.srkapi.auth.api.model.Permission;
 import com.srkapi.auth.api.model.User;
-import com.srkapi.common.dao.GenericDao;
-import com.srkapi.common.exception.DataAccessException;
+import com.srkapi.common.dao.ReactiveRepositoryMongo;
 
 import java.util.List;
 
-public interface UserDao extends GenericDao<User>{
+public interface UserDao extends ReactiveRepositoryMongo<User> {
 	
-	User findByEmail(String email) throws DataAccessException;
+	User findByEmail(String email);
 
-	List<Permission> findUserPermissions()throws DataAccessException;
+	List<Permission> findUserPermissions();
 	
-	User findUserByToken(String token)throws DataAccessException;
+	User findUserByToken(String token);
 
-	User findByUsernameOrEmail(String username, String email) throws DataAccessException;
+	User findByUsernameOrEmail(String username, String email);
 	
 }

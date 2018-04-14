@@ -8,9 +8,6 @@ import com.srkapi.common.dao.SequenceDao;
 import com.srkapi.common.service.impl.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rx.Single;
-
-import javax.annotation.PostConstruct;
 
 ;
 
@@ -23,11 +20,8 @@ public class PermissionServiceImpl extends GenericServiceImpl<Permission, Permis
 	@Autowired
 	protected SequenceDao sequenceDao;
 	
-	
-	@Override
-	public Single<PermissionDto> add(Permission permission){
-		return super.add(permission);
-	}
+
+
 
 	@Override
 	public PermissionDto toDto(Permission model) {

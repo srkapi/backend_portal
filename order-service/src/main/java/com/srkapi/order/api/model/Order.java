@@ -1,13 +1,14 @@
 package com.srkapi.order.api.model;
 
 import com.srkapi.common.model.EntityBase;
-import com.srkapi.order.api.dto.OrderDto;
+import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Document(collection = "Order")
-public class Order extends EntityBase<Order,OrderDto>{
+@Data
+public class Order extends EntityBase{
 
 	private Long dischargeDate;
 	private String coordinateInit;
@@ -84,17 +85,4 @@ public class Order extends EntityBase<Order,OrderDto>{
 
 
 
-	@Override
-	public OrderDto toDto() {
-		OrderDto orderModel = new OrderDto();
-		orderModel.setId(this.getId());
-		orderModel.setPrice(this.getPrice());
-		orderModel.setCoordinateFinish(this.getCoordinateFinish());
-		orderModel.setCoordinateInit(this.getCoordinateInit());
-		orderModel.setDischargeDate(this.getDischargeDate());
-		orderModel.setIdOwner(this.getIdOwner());
-		orderModel.setIdTransport(this.getIdTransport());
-		orderModel.setLoadType(this.getLoadType());
-		return orderModel;
-	}
 }

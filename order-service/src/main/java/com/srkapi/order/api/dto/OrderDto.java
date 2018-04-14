@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 
 
-public class OrderDto extends BaseDto<Order> implements Serializable {
+public class OrderDto implements Serializable {
     static final long serialVersionUID = 42L;
     private String id;
     private Long dischargeDate;
@@ -81,16 +81,4 @@ public class OrderDto extends BaseDto<Order> implements Serializable {
         this.price = price;
     }
 
-    @Override
-    public Order toModel() {
-            Order orderModel = new Order();
-            orderModel.setPrice(this.getPrice());
-            orderModel.setCoordinateFinish(this.getCoordinateFinish());
-            orderModel.setCoordinateInit(this.getCoordinateInit());
-            orderModel.setDischargeDate(this.getDischargeDate());
-            orderModel.setIdOwner(this.getIdOwner());
-            orderModel.setIdTransport(this.getIdTransport());
-            orderModel.setLoadType(this.getLoadType());
-            return orderModel;
-    }
 }

@@ -8,9 +8,7 @@ import com.srkapi.common.dao.SequenceDao;
 import com.srkapi.common.service.impl.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rx.Single;
-
-import javax.annotation.PostConstruct;
+import reactor.core.publisher.Flux;
 
 @Service
 public class RoleServiceImpl extends GenericServiceImpl<Role,RoleDto> implements RoleService{
@@ -20,14 +18,21 @@ public class RoleServiceImpl extends GenericServiceImpl<Role,RoleDto> implements
 	
 	@Autowired
 	protected SequenceDao sequenceDao;
-	
-	@PostConstruct
-	void init() {
-        init(Role.class, roleDao);
-    }
-	
+
+
 	@Override
-	public Single<RoleDto> add(Role role){
-		return super.add(role);
+	public Flux<RoleDto> findByCode(String code){
+		return this.roleDao.findByCode(code).map(it ->toDto(it));
+	}
+
+
+	@Override
+	public RoleDto toDto(Role model) {
+		return null;
+	}
+
+	@Override
+	public Role toModel(RoleDto Dto) {
+		return null;
 	}
 }

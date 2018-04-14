@@ -1,13 +1,11 @@
 package com.srkapi.auth.api.dao;
 
 import com.srkapi.auth.api.model.Role;
-import com.srkapi.common.dao.GenericDao;
-import com.srkapi.common.exception.DataAccessException;
+import com.srkapi.common.dao.ReactiveRepositoryMongo;
+import reactor.core.publisher.Flux;
 
-import java.util.List;
-
-public interface RoleDao extends GenericDao<Role>{
+public interface RoleDao extends ReactiveRepositoryMongo<Role> {
 
 
-    List<Role> findByCode(String id);
+    Flux<Role> findByCode(String id);
 }

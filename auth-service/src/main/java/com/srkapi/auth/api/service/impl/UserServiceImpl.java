@@ -1,22 +1,17 @@
 package com.srkapi.auth.api.service.impl;
 
-import com.srkapi.auth.api.dao.RoleDao;
 import com.srkapi.auth.api.dao.UserDao;
-import com.srkapi.auth.api.dto.PermissionDto;
 import com.srkapi.auth.api.dto.RoleDto;
 import com.srkapi.auth.api.dto.UserDto;
-import com.srkapi.auth.api.dto.UserImageDto;
-import com.srkapi.auth.api.model.Role;
 import com.srkapi.auth.api.model.User;
 import com.srkapi.auth.api.security.SecurityUtil;
+import com.srkapi.auth.api.service.RoleService;
 import com.srkapi.auth.api.service.UserService;
 import com.srkapi.common.constants.ConfigConstants;
-import com.srkapi.common.exception.DataAccessException;
 import com.srkapi.common.exception.DuplicateEmailRegisteredException;
 import com.srkapi.common.exception.OldPasswordNotMatch;
 import com.srkapi.common.exception.RequiredFieldMissingException;
 import com.srkapi.common.service.impl.GenericServiceImpl;
-import com.srkapi.common.util.image.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +19,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import rx.exceptions.Exceptions;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implements UserService {
@@ -42,7 +35,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
     private UserDao userDao;
 
     @Autowired
-    private RoleDao roleDao;
+    private RoleService rolerService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -50,38 +43,27 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
     @Value(ConfigConstants.IMAGE_UPLOAD_LOCATION)
     private String IMAGE_LOCATION;
 
-    @PostConstruct
-    void init() {
-        init(User.class, userDao);
-    }
 
     @Override
     public Mono findByEmail(String email) {
-        try {
 
             return Mono.just(userDao.findByEmail(email));
-        } catch (DataAccessException e) {
-            return Mono.error(e);
-        }
     }
 
     @Override
     public Mono<User> findByUsernameOrEmail(String username, String email) {
-        try {
             return Mono.just(userDao.findByUsernameOrEmail(username, email));
-        } catch (DataAccessException e) {
-            return Mono.error(e);
-        }
     }
 
     @Override
-    public Mono<UserDto> add(User user) {
+    public Mono<UserDto> add(UserDto user) {
 
         registerValidation(user);
 
         Mono byEmail = findByEmail(user.getEmail());
 
-        return byEmail.map(checkUser -> {
+
+       byEmail.map(checkUser -> {
 
             //check email already registered
             if (checkUser != null)
@@ -93,54 +75,49 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
                 if (splictedEmail.length >= 2) user.setUsername(splictedEmail[0]);
             }
 
+
             //encode password
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRegisteredOn(new Date());
-            user.setLastPasswordResetDate(new Date());
 
-            for (Role r : user.getRoles()) {
+            for (RoleDto r : user.getRoles()) {
 
-                List<Role> byCode = roleDao.findByCode(r.getCode());
-                user.setRoles(byCode);
-                byCode.forEach(it -> {
+                Flux<RoleDto> byCode = rolerService.findByCode(r.getCode());
+                user.setRoles(byCode.collectList().block());
+                byCode.subscribe(it -> {
                             user.setPermissions(it.getPermissions());
                         }
                 );
 
 
             }
+            return user;
 
-            user.setStatus(User.STATUS_ACTIVE);
-
-             return super.add(user);
-
+        }).thenEmpty(it -> {
+            throw Exceptions.propagate(new DuplicateEmailRegisteredException());
         });
+
+        return this.add(user);
 
     }
 
     @Override
-    public Mono<Object> edit(User user, UserImageDto imageDto) {
+    public Mono<UserDto> edit(UserDto user) {
 
         User loggedUser = SecurityUtil.getLoggedDbUser();
 
-        ImageUtil imageUtil = ImageUtil.createDropBoxStorageImageUtil();
-
         Mono<UserDto> byId = getById(loggedUser.getId());
-        return byId.map(savedUser -> {
-                user.setId(savedUser.getId());
-                user.setEmail(savedUser.getEmail());
-                user.setUsername(savedUser.getUsername());
-                user.setPassword(savedUser.getPassword());
-                user.setRoles(savedUser.getRoles().stream().map(RoleDto::toModel).collect(Collectors.toList()));
-                user.setPermissions(savedUser.getPermissions().stream().map(PermissionDto::toModel).collect(Collectors.toList()));
-                user.setAttempts(savedUser.getAttempts());
-                user.setStatus(1);
+        byId.subscribe(savedUser -> {
+            user.setId(savedUser.getId());
+            user.setEmail(savedUser.getEmail());
+            user.setUsername(savedUser.getUsername());
+            user.setPassword(savedUser.getPassword());
+            user.setAttempts(savedUser.getAttempts());
 
-                return  super.edit(user);
 
 
         });
 
+        return super.edit(user);
 
     }
 
@@ -168,7 +145,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
 
     @Override
     public Mono<Boolean> delete(String id) {
-        User user = new User();
+        UserDto user = new UserDto();
         user.setId(id);
         super.delete(user);
         return Mono.just(true);
@@ -191,7 +168,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
         }
     }
 
-    private boolean registerValidation(User user) {
+    private boolean registerValidation(UserDto user) {
 
         List<String> missingFields = new ArrayList<>();
 
@@ -208,4 +185,13 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
 
     }
 
+    @Override
+    public UserDto toDto(User model) {
+        return null;
+    }
+
+    @Override
+    public User toModel(UserDto Dto) {
+        return null;
+    }
 }

@@ -1,11 +1,12 @@
 package com.srkapi.common.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 
+@Getter
+@Setter
 public abstract class EntityBase{
 
     public static final Integer STATUS_INACTIVE = 0;
@@ -18,7 +19,21 @@ public abstract class EntityBase{
     protected Integer status = 1; //default status
 
 
+    public Integer getStatus() {
+        return status;
+    }
 
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     @Override
     public boolean equals(Object object) {

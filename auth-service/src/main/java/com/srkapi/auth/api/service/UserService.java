@@ -1,7 +1,6 @@
 package com.srkapi.auth.api.service;
 
 import com.srkapi.auth.api.dto.UserDto;
-import com.srkapi.auth.api.dto.UserImageDto;
 import com.srkapi.auth.api.model.User;
 import com.srkapi.common.service.GenericService;
 import reactor.core.publisher.Mono;
@@ -13,8 +12,8 @@ public interface UserService extends GenericService<User,UserDto>{
 	Mono findByEmail(String email);
 
 	Mono<User> findByUsernameOrEmail(String username, String email);
-    
-	Mono<Object> edit(User user, UserImageDto imageDto);
+
+	Mono<UserDto> edit(UserDto user);
 
 
 	Mono<Boolean> delete(String id);
