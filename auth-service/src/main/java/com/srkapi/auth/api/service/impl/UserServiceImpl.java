@@ -26,6 +26,7 @@ import reactor.core.publisher.Mono;
 import rx.exceptions.Exceptions;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -84,6 +85,9 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
         }).thenEmpty(it -> {
             throw Exceptions.propagate(new DuplicateEmailRegisteredException());
         });
+        User userModel = toModel(user);
+        userModel.setAttempts(0);
+        userModel.setLastLoggedOn(new Date());
         return this.add(user);
     }
 
@@ -98,7 +102,6 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
             user.setEmail(savedUser.getEmail());
             user.setUsername(savedUser.getUsername());
             user.setPassword(savedUser.getPassword());
-            user.setAttempts(savedUser.getAttempts());
 
 
         });
@@ -180,7 +183,6 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
     public User toModel(UserDto Dto) {
 
         User result = new User();
-        result.setAttempts(Dto.getAttempts());
         result.setEmail(Dto.getEmail());
         result.setFirstName(Dto.getFirstName());
         result.setLastName(Dto.getLastName());

@@ -11,7 +11,6 @@ public class UserDto implements Serializable {
     private String password;
     private String firstName;
     private String lastName;
-    private Integer attempts;
     private List<RoleDto> roles = new ArrayList<>();
     private List<PermissionDto> permissions = new ArrayList<>();
 
@@ -63,16 +62,6 @@ public class UserDto implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-
-
-    public Integer getAttempts() {
-        return attempts;
-    }
-
-    public void setAttempts(Integer attempts) {
-        this.attempts = attempts;
     }
 
     public List<RoleDto> getRoles() {
