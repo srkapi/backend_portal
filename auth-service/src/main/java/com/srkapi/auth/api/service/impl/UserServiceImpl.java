@@ -49,57 +49,42 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
     @Override
     public Mono findByEmail(String email) {
 
-            return Mono.just(userDao.findByEmail(email));
+        return Mono.just(userDao.findByEmail(email));
     }
 
     @Override
     public Mono<User> findByUsernameOrEmail(String username, String email) {
-            return Mono.just(userDao.findByUsernameOrEmail(username, email));
+        return Mono.just(userDao.findByUsernameOrEmail(username, email));
     }
 
     @Override
     public Mono<UserDto> add(UserDto user) {
-
         registerValidation(user);
-
         Mono byEmail = findByEmail(user.getEmail());
-
-
-       byEmail.map(checkUser -> {
-
+        byEmail.map(checkUser -> {
             //check email already registered
             if (checkUser != null)
                 throw Exceptions.propagate(new DuplicateEmailRegisteredException());
-
             //setting default username, if username is empty
             if (StringUtils.isEmpty(user.getUsername())) {
                 String[] splictedEmail = user.getEmail().split("@");
                 if (splictedEmail.length >= 2) user.setUsername(splictedEmail[0]);
             }
-
-
             //encode password
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-
             for (RoleDto r : user.getRoles()) {
-
                 Flux<RoleDto> byCode = rolerService.findByCode(r.getCode());
                 user.setRoles(byCode.collectList().block());
                 byCode.subscribe(it -> {
                             user.setPermissions(it.getPermissions());
                         }
                 );
-
-
             }
             return user;
-
         }).thenEmpty(it -> {
             throw Exceptions.propagate(new DuplicateEmailRegisteredException());
         });
-
         return this.add(user);
-
     }
 
     @Override
@@ -114,7 +99,6 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
             user.setUsername(savedUser.getUsername());
             user.setPassword(savedUser.getPassword());
             user.setAttempts(savedUser.getAttempts());
-
 
 
         });
@@ -202,14 +186,14 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
         result.setLastName(Dto.getLastName());
         result.setPassword(Dto.getPassword());
         List<Role> roles = new ArrayList<>();
-        Dto.getRoles().forEach(it->{
+        Dto.getRoles().forEach(it -> {
             Role aux = new Role();
             aux.setCode(it.getCode());
             roles.add(aux);
         });
         result.setRoles(roles);
         List<Permission> permissions = new ArrayList<>();
-        Dto.getPermissions().forEach(it->{
+        Dto.getPermissions().forEach(it -> {
             Permission aux = new Permission();
             aux.setCode(it.getCode());
             permissions.add(aux);
