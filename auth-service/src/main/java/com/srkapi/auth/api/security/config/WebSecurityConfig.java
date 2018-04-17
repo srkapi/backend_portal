@@ -1,5 +1,8 @@
 package com.srkapi.auth.api.security.config;
 
+import com.srkapi.auth.api.security.JwtAuthenticationEntryPoint;
+import com.srkapi.auth.api.security.JwtAuthenticationTokenFilter;
+import com.srkapi.common.constants.PermissionConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.srkapi.auth.api.security.JwtAuthenticationEntryPoint;
-import com.srkapi.auth.api.security.JwtAuthenticationTokenFilter;
-import com.srkapi.auth.api.model.Permission;
 
 @Configuration
 @EnableWebSecurity
@@ -68,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test/images/**").permitAll()
                 .antMatchers("/roles-permissions-setup/init/**").permitAll()
                 
-                .antMatchers(HttpMethod.POST, "/registerOtherSeller/**").hasRole(Permission.USER_SELLER_ADMIN)
+                .antMatchers(HttpMethod.POST, "/registerOtherSeller/**").hasRole(PermissionConstant.USER_ADMIN)
                 
                 //authenticated requests
                 .anyRequest().authenticated();

@@ -1,8 +1,6 @@
 package com.srkapi.product.api.config;
 
 import com.srkapi.common.cache.CacheConfig;
-import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
-import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.cache.CacheManager;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -10,29 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.util.Map;
-
 @Configuration
 public class AppConfiguration {
 
-	@Bean
-	public ErrorAttributes errorAttributes() {
-	    
-		return new DefaultErrorAttributes(){
-	    	@Override
-	        public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes, boolean includeStackTrace) {
-	            Map<String, Object> errorAttributes = super.getErrorAttributes(requestAttributes, includeStackTrace);
-	            errorAttributes.remove("exception");
-	            return errorAttributes;
-	        }
-	    };
-	    
-	}
+
 	
 	@Bean
     public PasswordEncoder loadPasswordEncoder() {

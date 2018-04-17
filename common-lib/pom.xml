@@ -43,11 +43,7 @@
 			<artifactId>spring-security-web</artifactId>
 		</dependency>
 
-		<!-- Spring Mobile Devices -->
-		<dependency>
-			<groupId>org.springframework.mobile</groupId>
-			<artifactId>spring-mobile-device</artifactId>
-		</dependency>
+
 
 		<!-- JWT -->
 		<dependency>

@@ -1,6 +1,8 @@
 package com.srkapi.order.api.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.srkapi.common.constants.PermissionConstant;
+import com.srkapi.common.security.CommonAuthenticationEntryPoint;
+import com.srkapi.common.security.CommonAuthenticationTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,17 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.srkapi.common.model.Permission;
-import com.srkapi.common.security.CommonAuthenticationEntryPoint;
-import com.srkapi.common.security.CommonAuthenticationTokenFilter;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private CommonAuthenticationEntryPoint unauthorizedHandler;
 
     @Bean
     public CommonAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
@@ -34,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // we don't need CSRF because our token is invulnerable
                 .csrf().disable()
 
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .exceptionHandling().authenticationEntryPoint(new CommonAuthenticationEntryPoint()).and()
 
                 // don't create session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -44,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 
                 .antMatchers(HttpMethod.GET, "/order/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/order/**").permitAll()
-				.antMatchers(HttpMethod.PUT, "/order/**").hasRole(Permission.USER_SELLER)
+				.antMatchers(HttpMethod.PUT, "/order/**").hasRole(PermissionConstant.USER_COMPANY)
                 
                 //authenticated requests
                 .anyRequest().authenticated();

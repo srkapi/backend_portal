@@ -3,7 +3,6 @@ package com.srkapi.product.api.security.config;
 import com.srkapi.common.constants.PermissionConstant;
 import com.srkapi.common.security.CommonAuthenticationEntryPoint;
 import com.srkapi.common.security.CommonAuthenticationTokenFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,8 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private CommonAuthenticationEntryPoint unauthorizedHandler;
 
     @Bean
     public CommonAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
@@ -33,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // we don't need CSRF because our token is invulnerable
                 .csrf().disable()
 
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .exceptionHandling().authenticationEntryPoint(new CommonAuthenticationEntryPoint()).and()
 
                 // don't create session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
