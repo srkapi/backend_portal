@@ -14,27 +14,28 @@ public abstract class GenericServiceImpl<T extends EntityBase,S> implements Gene
 
 	@Override
 	public Mono<S> getById(String id){
-			return this.genericDao.findById(id).map(it -> toDto(it));
+		return getRepository().findById(id).map(it -> toDto(it));
 	}
 
 	public abstract S toDto(T model);
 	public abstract T toModel(S Dto);
+	public abstract GenericRepositoryMongoImpl<T> getRepository();
 
 
 
 	@Override
 	public Mono<S> add(S obj){
-		return this.genericDao.save(toModel(obj)).map(it->toDto(it));
+		return getRepository().save(toModel(obj)).map(it->toDto(it));
 	}
 
 	@Override
 	public Mono<S> edit(S obj){
-		return this.genericDao.save(toModel(obj)).map(it->toDto(it));
+		return getRepository().save(toModel(obj)).map(it->toDto(it));
 	}
 
 	@Override
 	public Flux<Boolean> delete(S obj){
-		Mono<Void> delete = this.genericDao.delete(toModel(obj));
+		Mono<Void> delete = getRepository().delete(toModel(obj));
 		Flux<Boolean> booleanFlux = delete.flatMap(it ->
 				Mono.just(true)
 		);
@@ -43,7 +44,7 @@ public abstract class GenericServiceImpl<T extends EntityBase,S> implements Gene
 
 	@Override
 	public Flux<S> getAll(){
-		return this.genericDao.findAll().map(it -> toDto(it));
+		return getRepository().findAll().map(it -> toDto(it));
 	}
 
 }

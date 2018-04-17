@@ -4,22 +4,17 @@ import com.srkapi.auth.api.dao.PermissionDao;
 import com.srkapi.auth.api.dto.PermissionDto;
 import com.srkapi.auth.api.model.Permission;
 import com.srkapi.auth.api.service.PermissionService;
-import com.srkapi.common.dao.SequenceDao;
+import com.srkapi.common.dao.impl.GenericRepositoryMongoImpl;
 import com.srkapi.common.service.impl.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-;
 
 @Service
 public class PermissionServiceImpl extends GenericServiceImpl<Permission, PermissionDto> implements PermissionService{
 
 	@Autowired
-	protected PermissionDao permissionDao;
-	
-	@Autowired
-	protected SequenceDao sequenceDao;
-	
+	private PermissionDao permissionDao;
 
 
 
@@ -31,5 +26,10 @@ public class PermissionServiceImpl extends GenericServiceImpl<Permission, Permis
 	@Override
 	public Permission toModel(PermissionDto Dto) {
 		return null;
+	}
+
+	@Override
+	public GenericRepositoryMongoImpl getRepository() {
+		return this.permissionDao;
 	}
 }

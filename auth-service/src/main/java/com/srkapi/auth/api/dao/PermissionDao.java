@@ -1,8 +1,11 @@
 package com.srkapi.auth.api.dao;
 
-import com.srkapi.common.dao.GenericDao;
 import com.srkapi.auth.api.model.Permission;
+import com.srkapi.common.dao.impl.GenericRepositoryMongoImpl;
+import org.springframework.stereotype.Repository;
 
-public interface PermissionDao extends GenericDao<Permission>{
+
+@Repository
+public interface PermissionDao extends GenericRepositoryMongoImpl<Permission> {
 
 }

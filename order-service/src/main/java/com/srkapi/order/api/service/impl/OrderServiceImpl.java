@@ -1,5 +1,6 @@
 package com.srkapi.order.api.service.impl;
 
+import com.srkapi.common.dao.impl.GenericRepositoryMongoImpl;
 import com.srkapi.common.service.impl.GenericServiceImpl;
 import com.srkapi.order.api.dao.OrderDao;
 import com.srkapi.order.api.dto.OrderDto;
@@ -7,26 +8,14 @@ import com.srkapi.order.api.model.Order;
 import com.srkapi.order.api.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 @Service
 public class OrderServiceImpl extends GenericServiceImpl<Order,OrderDto> implements OrderService {
 	
+
+
 	@Autowired
-	private OrderDao productDao;
-	
-
-	@Override
-	public Mono<OrderDto> add(OrderDto order) {
-		return super.add(order);
-	}
-
-
-
-	@Override
-	public Mono<OrderDto> edit(OrderDto order) {
-		return super.edit(order);
-	}
+	private OrderDao orderDao;
 
 
 	@Override
@@ -55,5 +44,10 @@ public class OrderServiceImpl extends GenericServiceImpl<Order,OrderDto> impleme
 		orderModel.setLoadType(Dto.getLoadType());
 		return orderModel;
 
+	}
+
+	@Override
+	public GenericRepositoryMongoImpl getRepository() {
+		return this.orderDao;
 	}
 }

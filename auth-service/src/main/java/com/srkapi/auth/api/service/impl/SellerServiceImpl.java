@@ -8,6 +8,7 @@ import com.srkapi.auth.api.model.User;
 import com.srkapi.auth.api.security.SecurityUtil;
 import com.srkapi.auth.api.service.SellerService;
 import com.srkapi.auth.api.service.UserService;
+import com.srkapi.common.dao.impl.GenericRepositoryMongoImpl;
 import com.srkapi.common.exception.BadRequestException;
 import com.srkapi.common.messages.ErrorMessage;
 import com.srkapi.common.service.impl.GenericServiceImpl;
@@ -68,5 +69,10 @@ public class SellerServiceImpl extends GenericServiceImpl<User, SellerDto> imple
     @Override
     public User toModel(SellerDto Dto) {
         return null;
+    }
+
+    @Override
+    public GenericRepositoryMongoImpl getRepository() {
+        return sellerDao;
     }
 }

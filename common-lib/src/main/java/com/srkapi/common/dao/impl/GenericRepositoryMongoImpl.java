@@ -1,6 +1,8 @@
 package com.srkapi.common.dao.impl;
 
 import com.srkapi.common.dao.ReactiveRepositoryMongo;
+import org.springframework.stereotype.Repository;
 
-public abstract class GenericRepositoryMongoImpl<T> implements ReactiveRepositoryMongo<T> {
+@Repository
+public  interface GenericRepositoryMongoImpl<T> extends ReactiveRepositoryMongo<T> {
 }

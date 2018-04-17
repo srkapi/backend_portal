@@ -10,6 +10,7 @@ import com.srkapi.auth.api.security.SecurityUtil;
 import com.srkapi.auth.api.service.RoleService;
 import com.srkapi.auth.api.service.UserService;
 import com.srkapi.common.constants.ConfigConstants;
+import com.srkapi.common.dao.impl.GenericRepositoryMongoImpl;
 import com.srkapi.common.exception.DuplicateEmailRegisteredException;
 import com.srkapi.common.exception.OldPasswordNotMatch;
 import com.srkapi.common.exception.RequiredFieldMissingException;
@@ -38,7 +39,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
     private UserDao userDao;
 
     @Autowired
-    private RoleService rolerService;
+    private RoleService roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -74,12 +75,8 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
             //encode password
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             for (RoleDto r : user.getRoles()) {
-                Flux<RoleDto> byCode = rolerService.findByCode(r.getCode());
+                Flux<RoleDto> byCode = roleService.findByCode(r.getCode());
                 user.setRoles(byCode.collectList().block());
-                byCode.subscribe(it -> {
-                            user.setPermissions(it.getPermissions());
-                        }
-                );
             }
             return user;
         }).thenEmpty(it -> {
@@ -89,6 +86,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
         userModel.setAttempts(0);
         userModel.setLastLoggedOn(new Date());
         return this.add(user);
+
     }
 
     @Override
@@ -195,12 +193,13 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
         });
         result.setRoles(roles);
         List<Permission> permissions = new ArrayList<>();
-        Dto.getPermissions().forEach(it -> {
-            Permission aux = new Permission();
-            aux.setCode(it.getCode());
-            permissions.add(aux);
-        });
+
         result.setPermissions(permissions);
         return result;
+    }
+
+    @Override
+    public GenericRepositoryMongoImpl getRepository() {
+        return this.userDao;
     }
 }

@@ -2,11 +2,14 @@ package com.srkapi.auth.api.dao;
 
 import com.srkapi.auth.api.model.Permission;
 import com.srkapi.auth.api.model.User;
-import com.srkapi.common.dao.ReactiveRepositoryMongo;
+import com.srkapi.common.dao.impl.GenericRepositoryMongoImpl;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface UserDao extends ReactiveRepositoryMongo<User> {
+
+@Repository
+public interface UserDao extends GenericRepositoryMongoImpl<User> {
 	
 	User findByEmail(String email);
 

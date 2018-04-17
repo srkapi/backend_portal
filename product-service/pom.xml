@@ -120,8 +120,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+            <version>3.0.5.RELEASE</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 	
 	<dependencyManagement>
 		<dependencies>

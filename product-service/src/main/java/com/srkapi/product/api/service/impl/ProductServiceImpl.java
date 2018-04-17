@@ -1,40 +1,22 @@
 package com.srkapi.product.api.service.impl;
 
-import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.srkapi.common.security.SecurityUtil;
 import com.srkapi.common.service.impl.GenericServiceImpl;
-import com.srkapi.product.api.dao.ProductDao;
+import com.srkapi.product.api.dto.ProductDto;
 import com.srkapi.product.api.model.Product;
 import com.srkapi.product.api.service.ProductService;
-
-import rx.Single;
+import org.springframework.stereotype.Service;
 
 @Service
-public class ProductServiceImpl extends GenericServiceImpl<Product> implements ProductService {
-	
-	@Autowired
-	private ProductDao productDao;
-	
-	@PostConstruct
-	void init() {
-		init(Product.class, productDao);
-	}
-	
+public class ProductServiceImpl extends GenericServiceImpl<Product,ProductDto> implements ProductService {
+
+
 	@Override
-	public Single<Product> add(Product product) {
-		String sellerId = SecurityUtil.getAuthUserDetails().getUserId();
-		product.setSellerId(sellerId);
-		return super.add(product);
+	public ProductDto toDto(Product model) {
+		return null;
 	}
-	
+
 	@Override
-	public Single<Product> edit(Product product) {
-		String sellerId = SecurityUtil.getAuthUserDetails().getUserId();
-		product.setSellerId(sellerId);
-		return super.edit(product);
+	public Product toModel(ProductDto Dto) {
+		return null;
 	}
-	
 }

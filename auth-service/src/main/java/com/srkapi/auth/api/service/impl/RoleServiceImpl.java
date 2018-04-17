@@ -4,7 +4,7 @@ import com.srkapi.auth.api.dao.RoleDao;
 import com.srkapi.auth.api.dto.RoleDto;
 import com.srkapi.auth.api.model.Role;
 import com.srkapi.auth.api.service.RoleService;
-import com.srkapi.common.dao.SequenceDao;
+import com.srkapi.common.dao.impl.GenericRepositoryMongoImpl;
 import com.srkapi.common.service.impl.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,6 @@ public class RoleServiceImpl extends GenericServiceImpl<Role,RoleDto> implements
 	@Autowired
 	protected RoleDao roleDao;
 	
-	@Autowired
-	protected SequenceDao sequenceDao;
 
 
 	@Override
@@ -34,5 +32,10 @@ public class RoleServiceImpl extends GenericServiceImpl<Role,RoleDto> implements
 	@Override
 	public Role toModel(RoleDto Dto) {
 		return null;
+	}
+
+	@Override
+	public GenericRepositoryMongoImpl getRepository() {
+		return this.roleDao;
 	}
 }

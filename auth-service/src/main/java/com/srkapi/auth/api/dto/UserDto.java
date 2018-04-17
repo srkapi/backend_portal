@@ -12,7 +12,6 @@ public class UserDto implements Serializable {
     private String firstName;
     private String lastName;
     private List<RoleDto> roles = new ArrayList<>();
-    private List<PermissionDto> permissions = new ArrayList<>();
 
 
     public  UserDto(){}
@@ -72,13 +71,6 @@ public class UserDto implements Serializable {
         this.roles = roles;
     }
 
-    public List<PermissionDto> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(List<PermissionDto> permissions) {
-        this.permissions = permissions;
-    }
 
 
 }
