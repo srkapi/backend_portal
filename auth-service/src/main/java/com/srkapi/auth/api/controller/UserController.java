@@ -43,8 +43,7 @@ public class UserController extends ControllerBase {
 		return userService.edit(user);
     }
 
-	@PostMapping(path = "/",
-			produces="application/json", consumes="application/json;charset=UTF-8")
+	@PostMapping
 	public Mono<UserDto> save(@RequestBody UserDto user) {
 		return userService.add(user);
 	}
