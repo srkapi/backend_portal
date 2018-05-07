@@ -9,8 +9,6 @@ import reactor.core.publisher.Mono;
 
 public abstract class GenericServiceImpl<T extends EntityBase,S> implements GenericService<T,S>,Mapper<T,S> {
 	
-	protected GenericRepositoryMongoImpl<T> genericDao;
-	
 
 	@Override
 	public Mono<S> getById(String id){
