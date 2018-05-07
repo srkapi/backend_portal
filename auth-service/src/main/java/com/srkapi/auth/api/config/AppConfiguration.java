@@ -14,6 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class AppConfiguration {
 
 
+
+
 	
 	@Bean
     public PasswordEncoder loadPasswordEncoder() {
