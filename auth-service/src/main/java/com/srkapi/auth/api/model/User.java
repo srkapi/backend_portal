@@ -16,6 +16,7 @@ public class User extends EntityBase{
     private String password;
     private String firstName;
     private String lastName;
+    private String token;
     private Date lastLoggedOn;
     private Date registeredOn;
     private Integer attempts;
@@ -27,6 +28,14 @@ public class User extends EntityBase{
     private Date lastPasswordResetDate;
     private SellerProfile sellerProfile = new SellerProfile();
     private BuyerProfile buyerProfile = new BuyerProfile();
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getEmail() {
         return email;

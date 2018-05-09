@@ -125,11 +125,7 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-core</artifactId>
-			<version>3.0.5.RELEASE</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
@@ -144,7 +140,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Dalston.RELEASE</version>
+				<version>Finchley.RC1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

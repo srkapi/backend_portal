@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -29,19 +28,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Autowired
+    private JwtUserDetailsServiceImpl userDetailsService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
-                .userDetailsService(getUserDetailsService())
-               	.passwordEncoder(passwordEncoder);
+                .userDetailsService(this.userDetailsService)
+                .passwordEncoder(passwordEncoder);
     }
 
-    @Bean
-    public UserDetailsService getUserDetailsService(){
-        return new JwtUserDetailsServiceImpl();
-    }
 
     @Bean
     @Override
@@ -70,16 +68,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //allow anonymous auth requests
                 .antMatchers("/auth/**").permitAll()
-                
+
                 //allow requests
                 .antMatchers(HttpMethod.GET, "/users/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/sellers/**").permitAll()
                 .antMatchers("/test/images/**").permitAll()
                 .antMatchers("/roles-permissions-setup/init/**").permitAll()
-                
+
                 .antMatchers(HttpMethod.POST, "/registerOtherSeller/**").hasRole(PermissionConstant.USER_ADMIN)
-                
+
                 //authenticated requests
                 .anyRequest().authenticated();
 
@@ -90,5 +88,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // disable page caching
         httpSecurity.headers().cacheControl();
     }
-    
+
 }
