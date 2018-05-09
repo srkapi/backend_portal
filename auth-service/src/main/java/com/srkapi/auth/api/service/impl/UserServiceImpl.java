@@ -51,12 +51,12 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
     @Override
     public Mono findByEmail(String email) {
 
-        return Mono.just(userDao.findByEmail(email));
+        return userDao.findByEmail(email);
     }
 
     @Override
     public Mono<User> findByUsernameOrEmail(String username, String email) {
-        return Mono.just(userDao.findByUsernameOrEmail(username, email));
+        return userDao.findByUsernameOrEmail(username, email);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
     @Override
     public Mono<User> findUserByToken(String token) {
         try {
-            return Mono.just(userDao.findUserByToken(token));
+            return userDao.findUserByToken(token);
         } catch (Exception e) {
             return Mono.error(e);
         }

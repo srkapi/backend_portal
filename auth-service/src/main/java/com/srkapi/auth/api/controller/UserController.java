@@ -3,7 +3,6 @@ package com.srkapi.auth.api.controller;
 import com.srkapi.auth.api.dto.PasswordDto;
 import com.srkapi.auth.api.dto.UserDto;
 import com.srkapi.auth.api.service.UserService;
-import com.srkapi.common.sse.ListenerType;
 import com.srkapi.common.util.ControllerBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +16,7 @@ public class UserController extends ControllerBase {
 	@Autowired
     private UserService userService;
 	
-	public UserController() {
-		super(ListenerType.USER);
-	}
+
 	
 	@GetMapping
     public Flux<UserDto> getAll() {

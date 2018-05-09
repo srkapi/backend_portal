@@ -14,6 +14,8 @@
 		<java.version>1.8</java.version>
 		<jjwt.version>0.7.0</jjwt.version>
 		<rxjava.version>1.1.6</rxjava.version>
+		<mongodb-driver-reactivestreams.version>1.5.0</mongodb-driver-reactivestreams.version>
+
 		<dropbox.version>2.1.1</dropbox.version>
 	</properties>
 
@@ -31,11 +33,30 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongodb-driver-reactivestreams</artifactId>
+			<version>${mongodb-driver-reactivestreams.version}</version>
+		</dependency>
+
 		<!-- Spring Data - Mongo -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.reactivemongo/reactivemongo -->
+		<dependency>
+			<groupId>org.reactivemongo</groupId>
+			<artifactId>reactivemongo_2.12</artifactId>
+			<version>0.13.0</version>
+		</dependency>
+
+
 
 		<!-- Spring Security -->
 		<dependency>
@@ -102,12 +123,13 @@
             <artifactId>reactor-core</artifactId>
             <version>3.0.5.RELEASE</version>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.10</version>
-        </dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 
-    </dependencies>
+
+	</dependencies>
 
 </project>

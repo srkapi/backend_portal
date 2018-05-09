@@ -2,6 +2,7 @@ package com.srkapi.auth.api.security.config;
 
 import com.srkapi.auth.api.security.JwtAuthenticationEntryPoint;
 import com.srkapi.auth.api.security.JwtAuthenticationTokenFilter;
+import com.srkapi.auth.api.security.service.JwtUserDetailsServiceImpl;
 import com.srkapi.common.constants.PermissionConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,17 +27,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
-                .userDetailsService(this.userDetailsService)
+                .userDetailsService(getUserDetailsService())
                	.passwordEncoder(passwordEncoder);
+    }
+
+    @Bean
+    public UserDetailsService getUserDetailsService(){
+        return new JwtUserDetailsServiceImpl();
     }
 
     @Bean

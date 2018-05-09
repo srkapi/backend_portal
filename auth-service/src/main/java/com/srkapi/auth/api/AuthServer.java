@@ -10,10 +10,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableDiscoveryClient
 @EnableCaching
 @EnableScheduling
-public class AuthServer
-{
-    public static void main( String[] args )
-    {
+public class AuthServer {
+    public static void main(String[] args) {
         SpringApplication.run(AuthServer.class, args);
     }
 }

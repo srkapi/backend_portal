@@ -2,9 +2,6 @@ package com.srkapi.auth.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.srkapi.common.model.EntityBase;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection="Role")
-@Data
-@Setter
-@Getter
 public class Role extends EntityBase{
 	
     public static final String ROLE_ADMIN = "role.admin";

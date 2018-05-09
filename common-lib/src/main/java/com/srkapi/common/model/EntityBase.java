@@ -1,12 +1,8 @@
 package com.srkapi.common.model;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 
-@Getter
-@Setter
 public abstract class EntityBase{
 
     public static final Integer STATUS_INACTIVE = 0;
