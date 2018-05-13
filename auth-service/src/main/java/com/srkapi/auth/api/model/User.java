@@ -2,6 +2,7 @@ package com.srkapi.auth.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.srkapi.common.model.EntityBase;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,6 +12,8 @@ import java.util.List;
 
 @Document(collection="User")
 public class User extends EntityBase{
+    @Id
+    private String id;
     private String email;
 	private String username;
     private String password;
@@ -28,6 +31,14 @@ public class User extends EntityBase{
     private Date lastPasswordResetDate;
     private SellerProfile sellerProfile = new SellerProfile();
     private BuyerProfile buyerProfile = new BuyerProfile();
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getToken() {
         return token;

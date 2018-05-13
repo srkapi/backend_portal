@@ -12,7 +12,7 @@ public class UserDto implements Serializable {
     private String firstName;
     private String lastName;
     private List<RoleDto> roles = new ArrayList<>();
-
+    private List<PermissionDto> permissions = new ArrayList<>();
 
     public  UserDto(){}
 
@@ -33,6 +33,14 @@ public class UserDto implements Serializable {
 
     public String getUsername() {
         return username;
+    }
+
+    public List<PermissionDto> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<PermissionDto> permissions) {
+        this.permissions = permissions;
     }
 
     public void setUsername(String username) {

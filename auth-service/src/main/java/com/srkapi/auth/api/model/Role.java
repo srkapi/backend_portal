@@ -16,6 +16,8 @@ public class Role extends EntityBase{
     public static final String ROLE_SELLER = "role.seller";
     public static final String ROLE_BUYER = "role.buyer";
 
+    private String id;
+
     private String code;
 
     @DBRef
@@ -28,7 +30,13 @@ public class Role extends EntityBase{
     	this.id = id;
     }
 
+	public String getId() {
+		return id;
+	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getCode() {
         return this.code;

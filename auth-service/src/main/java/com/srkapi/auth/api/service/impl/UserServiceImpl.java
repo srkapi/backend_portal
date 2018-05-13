@@ -3,6 +3,7 @@ package com.srkapi.auth.api.service.impl;
 import com.srkapi.auth.api.dao.UserDao;
 import com.srkapi.auth.api.dto.RoleDto;
 import com.srkapi.auth.api.dto.UserDto;
+import com.srkapi.auth.api.model.EmailVerification;
 import com.srkapi.auth.api.model.Permission;
 import com.srkapi.auth.api.model.Role;
 import com.srkapi.auth.api.model.User;
@@ -51,7 +52,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
     @Override
     public Mono findByEmail(String email) {
 
-        return Mono.just(userDao.findByEmail(email));
+        return userDao.findByEmail(email);
     }
 
     @Override
@@ -84,8 +85,11 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
         });
         User userModel = toModel(user);
         userModel.setAttempts(0);
+        userModel.setEmailVerification(new EmailVerification());
+        userModel.setRegisteredOn(new Date());
         userModel.setLastLoggedOn(new Date());
-        return this.add(user);
+        Mono<User> save = this.userDao.save(userModel);
+        return Mono.just(toDto(save.block()));
 
     }
 
@@ -174,13 +178,27 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
 
     @Override
     public UserDto toDto(User model) {
-        return null;
+        UserDto result = new UserDto();
+        result.setEmail(model.getEmail());
+        result.setFirstName(model.getFirstName());
+        result.setLastName(model.getLastName());
+        result.setPassword(model.getPassword());
+        List<RoleDto> roles = new ArrayList<>();
+        model.getRoles().forEach(it -> {
+            RoleDto aux = new RoleDto();
+            aux.setCode(it.getCode());
+            roles.add(aux);
+        });
+        result.setRoles(roles);
+        List<Permission> permissions = new ArrayList<>();
+        return result;
     }
 
     @Override
     public User toModel(UserDto Dto) {
 
         User result = new User();
+        result.setId(Dto.getId());
         result.setEmail(Dto.getEmail());
         result.setFirstName(Dto.getFirstName());
         result.setLastName(Dto.getLastName());
@@ -189,10 +207,17 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserDto> implement
         Dto.getRoles().forEach(it -> {
             Role aux = new Role();
             aux.setCode(it.getCode());
+            aux.setId(it.getId());
             roles.add(aux);
         });
-        result.setRoles(roles);
         List<Permission> permissions = new ArrayList<>();
+        Dto.getPermissions().forEach(it -> {
+            Permission aux = new Permission();
+            aux.setCode(it.getCode());
+            aux.setId(it.getId());
+            permissions.add(aux);
+        });
+        result.setRoles(roles);
 
         result.setPermissions(permissions);
         return result;
